@@ -30,7 +30,7 @@ def crossover(individual_a, individual_b):
 
 
 def mutate(individual):
-
+    
     ### write your code here
 
     return {"x": next_x, "y": next_y}
