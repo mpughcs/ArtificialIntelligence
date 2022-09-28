@@ -13,25 +13,50 @@ def sort_population_by_fitness(population):
     return sorted(population, key=objective_function)
 
 
-
-
 # ///////////////////////////////////////////////////////////////
 # finish functions
 def select_individual(sorted_population, fitness_sum):
-    #write your code here
-    return individual
+    offset = 0
+    normalized_fitness_sum = fitness_sum
+
+    lowest_fitness = objective_function(sorted_population[0])
+    if lowest_fitness < 0:
+        offset = -lowest_fitness
+        normalized_fitness_sum += offset * len(sorted_population)
+
+    draw = random.uniform(0, 1)
+
+    accumulated = 0
+    for individual in sorted_population:
+        fitness = objective_function(individual) + offset
+        probability = fitness / normalized_fitness_sum
+        accumulated += probability
+
+        if draw <= accumulated:
+            return individual
 
 
 def crossover(individual_a, individual_b):
+    xa = individual_a["x"]
+    ya = individual_a["y"]
 
-    ### write your code here
+    xb = individual_b["x"]
+    yb = individual_b["y"]
 
-    return {"x": new_x, "y": new_y}
+    return {"x": (xa + xb) / 2, "y": (ya + yb) / 2}
+
+
 
 
 def mutate(individual):
+    mutation_rate = 0.01
+    next_x=individual["x"]+ random.uniform(-mutation_rate, mutation_rate)
+    next_y=individual["y"]+ random.uniform(-mutation_rate, mutation_rate)
+    lower_boundary, upper_boundary = (-4, 4)
+
+    next_x = min(max(next_x, lower_boundary), upper_boundary)
+    next_y = min(max(next_y, lower_boundary), upper_boundary)
     
-    ### write your code here
 
     return {"x": next_x, "y": next_y}
 
@@ -72,7 +97,7 @@ def generate_population(size, x_boundaries, y_boundaries):
 
     return population
 
-#generations = 100
+generations = 100
 
 population = generate_population(size=10, x_boundaries=(-4, 4), y_boundaries=(-4, 4))
 
